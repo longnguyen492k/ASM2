@@ -1,67 +1,97 @@
 <?php
-session_start(); //khởi tạo session
+session_start();
 require_once "db_connect.php";
-//check xem form login đã hiển thị và người dùng đã đăng nhập hay chưa
+
 if (isset($_POST['login'])) {
-//tạo biến để lưu dữ liệu người dùng nhập vào từ form
-$username = $_POST['username'];
-$password = $_POST['password'];  //pass chưa mã hóa
-$pass = md5($password);          //pass đã mã hóa bằng "md5"
-// echo "Username: $username <br>";
-// echo "Password: $password <br>";
-//tạo sql query để truy vấn dữ liệu từ database
-$sql = "SELECT * FROM user WHERE user_name = '$username' AND password = '$pass'";
-$run = $connection->query($sql);
-$check = mysqli_fetch_array($run);
-if (is_array($check)) { 
-    //tạo 2 biến session tương ứng với thông tin login
-    $_SESSION['username'] = $username;
-    $_SESSION['password'] = $pass; 
-    ?>
-    <!-- echo "Login succeed !"; -->
-    <script>
-        alert("Login succeed !");  //hiển thị thông báo kiểu pop-up
-        window.location.href = "home.php";  //re-direct đến địa chỉ mong muốn
-    </script>
- <?php } else { ?>
-    <!-- echo "Login failed !"; -->
-    <script>
-        alert("Login failed !");  //hiển thị thông báo kiểu pop-up
-        window.location.href = "";  //href: rỗng => reload lại trang hiện tại
-    </script>
-<?php } 
-} 
-else {
-//nếu form chưa hiển thị hoặc người dùng chưa đăng nhập thì hiển thị form trước và xử lý sau
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $pass = md5($password);
+
+    $sql = "SELECT * FROM user WHERE user_name = '$username' AND password = '$pass'";
+    $run = $connection->query($sql);
+    $check = mysqli_fetch_array($run);
+    if (is_array($check)) {
+
+        $_SESSION['username'] = $username;
+        $_SESSION['password'] = $pass;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style_admin.css">
-</head>
-<body>
-<center>
-    <form action="" method="post">
-        <!-- action: rỗng => gửi & nhận thông tin trong cùng 1 file 
-        post: bảo mật => thông tin nhập vào form không hiển thị lên URL -->
-        <fieldset>
-            <legend>Login</legend>
-            <!--name: cực kỳ quan trọng, dùng để lưu giá trị của nhập vào từ form để xử lý
-            -->
-            <input type="text" name="username" placeholder="Enter username here" id="" required>
-            <br> <br>
-            <input type="password" name="password" id="" placeholder="Enter password here" required>
-            <br> <br>
-            <input type="submit" value="Login" name="login">
-        </fieldset>
-    </form>
-</center>++
-</body>
-</html>
+
+        <script>
+            alert("Login succeed !");
+            window.location.href = "home.php";
+        </script>
+    <?php } else { ?>
+
+        <script>
+            alert("Login failed !");
+            window.location.href = "";
+        </script>
+    <?php }
+} else {
+
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <style>
+            body,
+            html {
+                height: 100%;
+                margin: 0;
+            }
+
+            .bg {
+                /* The image used */
+                background-image: url("https://i.pinimg.com/originals/42/e0/13/42e013955ddde521a8c505a5d0e9b2b6.png");
+
+                /* Full height */
+                height: 100%;
+
+                /* Center and scale the image nicely */
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        </style>
+    </head>
+
+    <body class="bg">
+        <div id="login">
+            <div class="container">
+                <div id="login-row" class="row justify-content-center align-items-center">
+                    <div id="login-column" class="col-md-6">
+                        <div id="login-box" class="col-md-12">
+                            <form action="" method="post" style="margin-top: 250px;">
+                                <h1 class="text-center text-info">Login</h1>
+                                <div class="form-group">
+                                    <label for="username" class="text-info">Username:</label><br>
+                                    <input type="text" class="form-control" name="username" placeholder="Enter username here" id="" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="text-info">Password:</label><br>
+                                    <input type="password" class="form-control" name="password" id="" placeholder="Enter password here" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-info btn-md" value="Login" name="login">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    </html>
 <?php
-} 
+}
 ?>
